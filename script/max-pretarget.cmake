@@ -9,6 +9,7 @@ if (WIN32)
 	# These must be prior to the "project" command
 	# https://stackoverflow.com/questions/14172856/compile-with-mt-instead-of-md-using-cmake
 
+#[[
 	if (CMAKE_GENERATOR MATCHES "Visual Studio")
 		set(CMAKE_C_FLAGS_DEBUG            "/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1")
 		set(CMAKE_C_FLAGS_MINSIZEREL       "/MT /O1 /Ob1 /D NDEBUG")
@@ -26,7 +27,11 @@ if (WIN32)
 			$<$<CONFIG:Release>:/MT>
 			$<$<CONFIG:MinSizeRel>:/MT>
 			$<$<CONFIG:RelWithDebInfo>:/MT>
-		)		
+		)
+]]
+    if(MSVC)
+        set(CMAKE_C_FLAGS  "${${CMAKE_C_FLAGS}} /EHsc /Zc:preprocessor")
+        set(CMAKE_CXX_FLAGS  "${${CMAKE_CPP_FLAGS}} /EHsc /Zc:preprocessor")
 	else()
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 	endif ()
@@ -79,7 +84,7 @@ if (WIN32)
 
 	SET(MaxAPI_LIB ${MAX_SDK_INCLUDES}/x64/MaxAPI.lib)
 	SET(MaxAudio_LIB ${MAX_SDK_MSP_INCLUDES}/x64/MaxAudio.lib)
-	SET(Jitter_LIB ${MAX_SDK_JIT_INCLUDES}/x64/jitlib.lib)	
+	SET(Jitter_LIB ${MAX_SDK_JIT_INCLUDES}/x64/jitlib.lib)
 
 	MARK_AS_ADVANCED (MaxAPI_LIB)
 	MARK_AS_ADVANCED (MaxAudio_LIB)
