@@ -66,7 +66,7 @@ elseif (WIN32)
 	
 	set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".mxe64")
 
-	if (CMAKE_GENERATOR MATCHES "Visual Studio")
+	if (MSVC)
 		# warning about constexpr not being const in c++14
 		set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4814")
 
@@ -76,6 +76,7 @@ elseif (WIN32)
 		# allow parallel builds
 		set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/MP")
 
+		# use multi-threaded statically-linked runtime library
 		set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 	endif ()
 
