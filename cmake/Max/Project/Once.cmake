@@ -12,7 +12,6 @@ option(MAX_SDK_PACKAGE_OUT_OF_TREE
     "Output externals/extensions into a package layout inside the build tree instead of the source tree"
     OFF)
 
-set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # CMake 4.0 Adds CMAKE_MSVC_RUNTIME_CHECKS, like:
