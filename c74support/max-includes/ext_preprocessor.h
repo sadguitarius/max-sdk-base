@@ -104,10 +104,20 @@
 #define C74_IS_EMPTY_BRACKET_TEST(...)	,
 
 
+// C74_MSVC_TRADITIONAL_PP selects workarounds for the MSVC traditional preprocessor.
+// MSVC defines _MSVC_TRADITIONAL as 0 under /Zc:preprocessor. MSVC before VS 2017 15.8 does not define it.
+// clang defines _MSC_VER in MSVC mode but always uses a conforming preprocessor.
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(__clang__) && (!defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL)
+#	define C74_MSVC_TRADITIONAL_PP 1
+#else
+#	define C74_MSVC_TRADITIONAL_PP 0
+#endif
+
+
 // C74_VA_NUM_ARGS() is a very nifty macro to retrieve the number of arguments handed to a variable-argument macro.
 // unfortunately, VS 2010 still has this preprocessor bug which treats a __VA_ARGS__ argument as being one single parameter:
 // https://connect.microsoft.com/VisualStudio/feedback/details/521844/variadic-macro-treating-va-args-as-a-single-parameter-for-other-macros#details
-#if _MSC_VER >= 1400
+#if C74_MSVC_TRADITIONAL_PP
 #	define C74_VA_NUM_ARGS_HELPER(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, N, ...)	N
 #	define C74_VA_NUM_ARGS_REVERSE_SEQUENCE			16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
 #	define C74_VA_NUM_ARGS_LEFT (
@@ -124,7 +134,7 @@
 
 // C74_PASS_ARGS passes __VA_ARGS__ as multiple parameters to another macro, working around the following bug:
 // https://connect.microsoft.com/VisualStudio/feedback/details/521844/variadic-macro-treating-va-args-as-a-single-parameter-for-other-macros#details
-#if _MSC_VER >= 1400
+#if C74_MSVC_TRADITIONAL_PP
 #	define C74_PASS_ARGS_LEFT (
 #	define C74_PASS_ARGS_RIGHT )
 #	define C74_PASS_ARGS(...)							C74_PASS_ARGS_LEFT __VA_ARGS__ C74_PASS_ARGS_RIGHT
@@ -179,7 +189,7 @@
 //    this is done to sign-extend and promote shorter integer types
 //  - see object_method for an example
 
-#if _MSC_VER >= 1400
+#if C74_MSVC_TRADITIONAL_PP
 #define C74_VARFUN(VARFUN_IMPL, ...) C74_JOIN_2(C74_VARFUN_, C74_NUM_ARGS(__VA_ARGS__)) C74_PASS_ARGS(VARFUN_IMPL, __VA_ARGS__)
 #else
 #define C74_VARFUN(VARFUN_IMPL, ...) C74_JOIN_2(C74_VARFUN_, C74_NUM_ARGS(__VA_ARGS__))( VARFUN_IMPL, __VA_ARGS__ )
